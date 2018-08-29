@@ -92,9 +92,14 @@ C_mean1= nx.average_clustering(G1)
 C_mean2= nx.average_clustering(G2)
 C_mean3= nx.average_clustering(G3)
 
-# clausura transitiva de la red o Global Clustering, no lo vimos, pero para hacer la cantidad de tripletes conectados
+# Clausura transitiva de la red o Global Clustering o Transitividad:, no lo vimos, pero para hacer la cantidad de tripletes conectados
 #https://stackoverflow.com/questions/43283388/graph-theory-number-of-connected-triples
-#c1 = 3*nx.triangles(G1)/ acavaalgo como una sumatoria
+#c1 = 3*nx.triangles(G1)/ sumatoria sobre (todos los posibles triangulos)
+#Existe una funcion que lo calcula directo aunque podemos pensar como hacer la cuenta del denominador.
+C_gclust1=nx.transitivity(G1)
+C_gclust2=nx.transitivity(G2)
+C_gclust3=nx.transitivity(G3)
+
 
 #Para ver si estaba direccionada existe 'is.directed()'  
 
@@ -109,7 +114,7 @@ haytabla = pd.DataFrame({"Red":["Y2H","AP-MS","LIT"],
                      "K max":[K_max1,K_max2,K_max3],
                      "K min":[K_min1,K_min2,K_min3],
                      "Dirigida":[False,False,False],
-                     "Densidad":[d1,d2,d3],"C medio":[C_mean1,C_mean2,C_mean3],
-                     #"C":[c1,c2,c3],
+                     "Densidad":[d1,d2,d3],"<C_clust>":[C_mean1,C_mean2,C_mean3],
+                     "C_gclust":[C_gclust1,C_gclust2,C_gclust3],
                     })
 print (haytabla)
