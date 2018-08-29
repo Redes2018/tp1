@@ -1,0 +1,75 @@
+import sys
+sys.path.append('/usr/local/lib/python3.5/site-packages')
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+import networkx as nx
+import os
+
+#Leemos el archivo
+myFolder='/home/danilo/Documentos/redes/tp1/tc01_data/'
+data1 = pd.read_csv(myFolder+'yeast_Y2H.txt', sep='\t', header=None)
+data2 = pd.read_csv(myFolder+'yeast_AP-MS.txt', sep='\t', header=None)
+data3 = pd.read_csv(myFolder+'yeast_LIT.txt', sep='\t', header=None)
+
+'''
+#Para acceder a un valor es data[col][fila]
+G1=nx.Graph()
+
+G1.add_nodes_from(data1[0][:])
+G1.add_nodes_from(data1[1][:])
+nodes1=G1.number_of_nodes()
+
+for i in range(len(data1)):
+    G1.add_edges_from([(data1[0][i],data1[1][i])])
+
+edges1=G1.number_of_edges()
+#plt.figure()
+#plt.subplot(3,1,1)
+#nx.draw(G1, width=1, with_labels=False, node_color='blue',node_size=50)
+
+
+
+G2=nx.Graph()
+
+G2.add_nodes_from(data2[0][:])
+G2.add_nodes_from(data2[1][:])
+nodes2=G2.number_of_nodes()
+
+for i in range(len(data2)):
+    G2.add_edges_from([(data2[0][i],data2[1][i])])
+
+edges2=G2.number_of_edges()
+
+#plt.subplot(3,1,2)
+#nx.draw(G2, width=1, with_labels=False, node_color='blue',node_size=50)
+
+
+
+G3=nx.Graph()
+
+G3.add_nodes_from(data3[0][:])
+G3.add_nodes_from(data3[1][:])
+nodes3=G3.number_of_nodes()
+
+for i in range(len(data3)):
+    G3.add_edges_from([(data3[0][i],data3[1][i])])
+
+edges3=G3.number_of_edges()
+
+#plt.subplot(3,1,3)
+#nx.draw(G3, width=1, with_labels=False, node_color='blue',node_size=50)
+#plt.show()
+
+
+haytabla = pd.DataFrame({"Red":["Y2H","AP-MS","LIT"],
+                    "Nodos":[nodes1,nodes2,nodes3],
+                     "Enlaces":[edges1,edges2,edges3],
+                     "Dirigida":[False,False,False]
+                    })
+print (haytabla)
+
+
+#Grado medio = #de p.v / #nodos
+# grado max = max # de p.V por c/nodo
+#densidad de la red = cantidad de edges en c/nodo / todos los edges entre pares de nodos posibles (hay una funcion que se llama density)
