@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import networkx as nx
 import os
-
+from scipy import stats
 
 # Ejercicio 2: Delfines
 
@@ -42,7 +42,7 @@ for d,g in zip(delfines,genero):
 
 #a) Tipos de Layout
 
-layouts=['random_layout','circular_layout','shell_layout','spring_layout','kamada_kawai_layout','spectral_layout']
+layouts=['random_layout','circular_layout','spring_layout','kamada_kawai_layout','spectral_layout']
 # fruchterman reingold es el algoritmo que usa spring
 
 for f,lay in enumerate(layouts):
@@ -61,7 +61,7 @@ plt.show()
 # In[ ]:
 
 
-#b)Analisis de la homofilia
+#b)i)Analisis de la homofilia
 Enlaces_fm=[]
 
 #Hacemos 3000 asignaciones aleatorias de genero:
@@ -93,13 +93,16 @@ for it in range(0,3000):
 mean_enlacesfm=np.mean(Enlaces_fm)
 desv_enlacesfm=np.std(Enlaces_fm)
 
-print 'Distribucion de enlaces fm:'
-print 'Valor medio {}'.format(mean_enlacesfm)
-print 'Desviacion Standar {}'.format(desv_enlacesfm)
-print 'Red Real {}'.format(Enlaces_fm[0])
+#b)ii) Comparación
+
+print ('Distribucion de enlaces fm:')
+print ('Valor medio(H null): {}'.format(mean_enlacesfm))
+print ('Desviacion Standar: {}'.format(desv_enlacesfm))
+print ('Valor medio (Red Real): {}'.format(Enlaces_fm[0]))
   
 #Histograma:
-plt.hist(Enlaces_fm, bins=15,edgecolor='black', linewidth=1.2,label='Hnull',density=True)
+plt.figure(6)
+plt.hist(Enlaces_fm, bins=len(enlaces)-1, edgecolor='black', linewidth=1.2,label='Hnull',density=True)
 plt.axvline(Enlaces_fm[0], c="red",label='Red real')#Linea vertical en el valor de la red real
 plt.xlabel('Fraccion de enlaces fm')
 plt.ylabel('Cuenta')
