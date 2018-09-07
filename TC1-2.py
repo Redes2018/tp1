@@ -64,12 +64,13 @@ plt.show()
 #b)i)Analisis de la homofilia
 Enlaces_fm=[]
 
-#Hacemos 3000 asignaciones aleatorias de genero:
-for it in range(0,3000):
+#Hacemos itNumber asignaciones aleatorias de genero:
+num_asignaciones=10000
+for it in range(0,num_asignaciones):
 
     #Reordenamos el vector de generos
     if it==0:
-        genero_shuffle=genero #No lo reordenamos si es el primero de la red real
+        genero_shuffle=genero # lo reordenamos si es el primero de la red real
     else:
         genero_shuffle=genero
         np.random.shuffle((genero_shuffle)) #Reordenamos aleat los generos si no es el primero
@@ -87,8 +88,7 @@ for it in range(0,3000):
         genero2=mydolphins.nodes[enlaces[i][1]]['gender']
         if genero1 != genero2:   #Comparamos los generos
          enlaces_fm=enlaces_fm+1 #Incrementamos el contador si el enlace es f-m
-    Enlaces_fm.append(float(enlaces_fm)/(mydolphins.number_of_edges())) #Guardamos la fraccion de enlaces f-m
-
+    Enlaces_fm.append(enlaces_fm) #Guardamos la cantidad de enlaces f-m
 #Valor medio y desviacion standar
 mean_enlacesfm=np.mean(Enlaces_fm)
 desv_enlacesfm=np.std(Enlaces_fm)
@@ -100,12 +100,27 @@ print ('Valor medio(H null): {}'.format(mean_enlacesfm))
 print ('Desviacion Standar: {}'.format(desv_enlacesfm))
 print ('Valor medio (Red Real): {}'.format(Enlaces_fm[0]))
   
-#Histograma:
-plt.figure(6)
-plt.hist(Enlaces_fm, bins=len(enlaces)-1, edgecolor='black', linewidth=1.2,label='Hnull',density=True)
+#b)iii) Histograma y p-valor:
+histograma=np.unique(Enlaces_fm,return_counts=True)
+k_enlacesfm=histograma[0]
+probabilidad=histograma[1]/float(num_asignaciones)
+
+#p-valor: supongamos que sea la probabilidad que queda acumulada a la derecha del valor que obtuvimos del numero de enlaces_fm de la red real.
+#Buscamos el k_enlacesfm mas cercano al que nos dio la red real.
+closestto=Enlaces_fm[0]
+theclosest=min(histograma[0], key=lambda x:abs(x-closestto))
+theclosest_index=int(np.where(histograma[0] == theclosest)[0])
+
+#Sumamos las probabilidades desde el mas cercano hasta el ultimo hacia la derecha.
+pvalue=np.sum(probabilidad[theclosest_index :])
+print ('p valor: {}'.format(pvalue))
+
+
+plt.figure()
+plt.stem(k_enlacesfm,probabilidad, basefmt='k', label='Hnull')
 plt.axvline(Enlaces_fm[0], c="red",label='Red real')#Linea vertical en el valor de la red real
-plt.xlabel('Fraccion de enlaces fm')
-plt.ylabel('Cuenta')
+plt.xlabel('$Numero$ $de$ $enlaces$ $fm$')
+plt.ylabel('$Probabilidad$')
 plt.title('Red de Delfines-Analisis de homofilia')
 plt.legend()
 plt.show() 
