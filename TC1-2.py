@@ -26,17 +26,20 @@ mydolphins = nx.read_gml(myFolder+'new_dolphins.gml')
 
 # Ahora creamos dos listas: una de nombres de delfines (nodos) y otra de los generos correspondientes
 Gender = pd.read_csv(myFolder+'dolphinsGender.txt', sep='\t', header=None)
-delfines = Gender[0] # nombres de delfines (nodos)
-genero = Gender[1]   # genero de los delfines
+delfines= Gender[0] # nombres de delfines (nodos)
+genero= Gender[1]   # genero de los delfines
 
-# A cada uno de los nodos ya existentes en el grafo, se le agrega el genero
-for d,g in zip(delfines,genero):
-    #Eliminamos los nodos sin genero(son tipo float (nan))
-    if type(g)==str:
-        mydolphins.add_node(d, gender=g)
-    
+#Delfines sin genero
+delfines=[d for i,d in enumerate(Gender[0]) if type(Gender[1][i]) is not float]
+genero=[g for i,g in enumerate(Gender[1]) if type(Gender[1][i]) is not float]
+delfines_remove= [d for i,d in enumerate(Gender[0]) if type(Gender[1][i]) is float]    
 
-#print mydolphins.nodes['Jet']['gender'] Para ver la prop genero en el delfin 'Jet'
+# A cada uno de los nodos se le agrega el genero y ademas eliminamos los delfines sin genero:
+for d,g in zip(delfines,genero):    
+    mydolphins.add_node(d, gender=g)
+
+for d in delfines_remove:
+    mydolphins.remove_node(d)
 
 
 # In[11]:
@@ -61,27 +64,27 @@ for f,lay in enumerate(layouts):
 plt.show()
 
 
-
 # In[ ]:
 
-
 #b)i)Analisis de la homofilia
+
 Enlaces_fm=[]
 
-#Hacemos itNumber asignaciones aleatorias de genero:
+#Hacemos num_asignaciones asignaciones aleatorias de genero:
 num_asignaciones=10000
 for it in range(0,num_asignaciones):
 
     #Reordenamos el vector de generos
     if it==0:
-        genero_shuffle=genero # lo reordenamos si es el primero de la red real
+        genero_shuffle=genero # no reordenamos si es el primero de la red real
     else:
         genero_shuffle=genero
         np.random.shuffle((genero_shuffle)) #Reordenamos aleat los generos si no es el primero
 
     #Reasignamos a cada nodo un valor en el vector de genero_shuffle:
     for d,g in zip(delfines,genero_shuffle):
-        mydolphins.add_node(d, gender=g)
+            mydolphins.add_node(d, gender=g)
+
         
     #Contamos la fraccion de enlaces que conecta nodos con diferente genero o sea f-m:
     enlaces=list(mydolphins.edges.data())
@@ -128,5 +131,4 @@ plt.ylabel('$Probabilidad$')
 plt.title('Red de Delfines-Analisis de homofilia')
 plt.legend()
 plt.show() 
-
 
