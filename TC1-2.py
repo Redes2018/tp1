@@ -31,7 +31,9 @@ genero = Gender[1]   # genero de los delfines
 
 # A cada uno de los nodos ya existentes en el grafo, se le agrega el genero
 for d,g in zip(delfines,genero):
-    mydolphins.add_node(d, gender=g)
+    #Eliminamos los nodos sin genero(son tipo float (nan))
+    if type(g)==str:
+        mydolphins.add_node(d, gender=g)
     
 
 #print mydolphins.nodes['Jet']['gender'] Para ver la prop genero en el delfin 'Jet'
@@ -45,6 +47,7 @@ for d,g in zip(delfines,genero):
 layouts=['random_layout','circular_layout','spring_layout','kamada_kawai_layout','spectral_layout']
 # fruchterman reingold es el algoritmo que usa spring
 
+
 for f,lay in enumerate(layouts):
  plt.figure(f)
  nx.draw_networkx(mydolphins,eval('nx.'+lay)(mydolphins),
@@ -54,6 +57,7 @@ for f,lay in enumerate(layouts):
         with_labels=False
        )
  plt.title(lay)
+ plt.legend()
 plt.show()
 
 
@@ -98,21 +102,21 @@ desv_enlacesfm=np.std(Enlaces_fm)
 print ('Distribucion de enlaces fm:')
 print ('Valor medio(H null): {}'.format(mean_enlacesfm))
 print ('Desviacion Standar: {}'.format(desv_enlacesfm))
-print ('Valor medio (Red Real): {}'.format(Enlaces_fm[0]))
+print ('Valor Red Real: {}'.format(Enlaces_fm[0]))
   
 #b)iii) Histograma y p-valor:
 histograma=np.unique(Enlaces_fm,return_counts=True)
 k_enlacesfm=histograma[0]
 probabilidad=histograma[1]/float(num_asignaciones)
 
-#p-valor: supongamos que sea la probabilidad que queda acumulada a la derecha del valor que obtuvimos del numero de enlaces_fm de la red real.
+#p-valor: supongamos que sea la probabilidad que queda acumulada a la izq del valor que obtuvimos del numero de enlaces_fm de la red real.
 #Buscamos el k_enlacesfm mas cercano al que nos dio la red real.
 closestto=Enlaces_fm[0]
 theclosest=min(histograma[0], key=lambda x:abs(x-closestto))
 theclosest_index=int(np.where(histograma[0] == theclosest)[0])
 
 #Sumamos las probabilidades desde el mas cercano hasta el ultimo hacia la derecha.
-pvalue=np.sum(probabilidad[theclosest_index :])
+pvalue=1-np.sum(probabilidad[theclosest_index :])
 print ('p valor: {}'.format(pvalue))
 
 
