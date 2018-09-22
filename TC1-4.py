@@ -77,6 +77,8 @@ intercept1=np.log(b1)
 print ('Ajuste rojo')
 print ('exponente = {}'.format(mu1))
 print ('intercept = {}'.format(intercept1))
+print('\n')
+
 
 xfit1=np.linspace(1,40,100)
 yfit1=(b1)*(xfit1**mu1)
@@ -90,6 +92,7 @@ intercept2=np.log(b2)
 print ('Ajuste azul')
 print ('exponente = {}'.format(mu2))
 print ('intercept = {}'.format(intercept2))
+print('\n')
 
 
 xfit2=np.linspace(1,40,100)
@@ -110,3 +113,27 @@ plt.ylabel('$knn$')
 plt.title('Exponente de Correlacion')
 plt.legend()
 plt.show()
+
+#iv)Asortividad con estimador de Newman:
+#Segun libro de Newman se puede calcular r de la siguiente forma:
+#r=(S1*Se-S2**2)/(S1*S3-S2**2)
+
+S1=np.sum(k_nodo)
+S2=np.sum(k_nodo**2)
+S3=np.sum(k_nodo**3)
+
+se=0
+enlaces=list(colab.edges())
+for i,e in enumerate(enlaces):
+ se=se+colab.degree(enlaces[i][0])*colab.degree(enlaces[i][1])
+Se=2*se
+
+r=(S1*Se-S2**2)/float(S1*S3-S2**2)
+
+print ('Asortatividad Barabasi (mu) = {}'.format(mu2))
+print ('Asortatividad Newman (r) = {}'.format(r))
+
+
+
+
+
