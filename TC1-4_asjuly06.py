@@ -10,12 +10,13 @@ import os
 def lineal(x, a, b):
   return a*x + np.log10(b)
 
+print ('Preparacion')
 # Leemos el archivo
 myFolder=(os.getcwd()+'/tc01_data/') #busca en el directorio actual
 
 # Primero creamos la red: 
-colab = nx.read_gml(myFolder+'netscience.gml')
-#net = nx.read_gml(myFolder+'as-22july06.gml')
+#colab = nx.read_gml(myFolder+'netscience.gml')
+colab= nx.read_gml(myFolder+'as-22july06.gml')
 
 #eliminamos nodos aislados:
 aislados=list(nx.isolates(colab))
@@ -30,6 +31,7 @@ nodos = colab.number_of_nodes()
 
 
 #i)
+print ('punto i)')
 # k_nodo es el vector de grado de cada nodo
 # knn_nodo es el valor, de grado promedio de vecinos de cada nodo
 k_nodo= [val for (node, val) in colab.degree()]
@@ -40,6 +42,7 @@ for i in range(len(k_nodo)):
 
 
 #ii)Grafico de knn en funcion del grado k:
+print ('punto ii)')
 #Tenemos que promediar:
 
 #Ordenar el knn_nodo en funcion del key del k_nodo
@@ -62,7 +65,7 @@ for i,j in enumerate(k):
 
 
 #iii) Ajuste: con funcion log(knn)=mu*(logk)+log(b)
-
+print ('punto iii)')
 #AJuste 1: usando los puntos rojos
 parametros1=curve_fit(lineal,np.log10(k_nodo),np.log10(knn_nodo))[0]
 mu1=parametros1[0]
@@ -75,7 +78,7 @@ print ('intercept = {}'.format(intercept1))
 print('\n')
 
 
-xfit1=np.linspace(1,40,1000)
+xfit1=np.linspace(1,10000,100000)
 yfit1=(b1)*(xfit1**mu1)
 
 #Ajuste 2: usando los puntos azules
@@ -90,7 +93,7 @@ print ('exponente = {}'.format(mu2))
 print ('intercept = {}'.format(intercept2))
 print('\n')
 
-xfit2=np.linspace(1,40,1000)
+xfit2=np.linspace(1,10000,100000)
 yfit2=(b2)*(xfit2**mu2)
 
 #AJuste 3: usando los puntos azules del grafico knn(k) y usando tambien el error:
@@ -111,7 +114,7 @@ print ('intercept = {}'.format(intercept3))
 print('\n')
 
 
-xfit3=np.linspace(1,40,1000)
+xfit3=np.linspace(1,10000,100000)
 yfit3=(b3)*(xfit3**mu3)
 
 
@@ -133,11 +136,12 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$k$')
 plt.ylabel('$knn$')
-plt.title('Exponente de Correlacion - Red de Colaboradores Cientificas (netscience)')
+plt.title('Exponente de Correlacion - Red de Internet (as-22july06)')
 plt.legend()
 plt.show()
 
 #iv)Asortividad con estimador de Newman:
+print ('punto iv)')
 #Segun libro de Newman se puede calcular r de la siguiente forma:
 #r=(S1*Se-S2**2)/(S1*S3-S2**2)
 
@@ -160,22 +164,25 @@ print ('Asortatividad Newman (r) = {}'.format(r))
 '''
 punto iii)
 Ajuste rojo
-exponente = 0.707886547728
-intercept = 0.256395513473
+exponente = 0.188512875837
+intercept = 2.05250193984
 
 
 Ajuste azul
-exponente = 0.306116655385
-intercept = 0.256395513473
+exponente = -0.44417355266
+intercept = 2.05250193984
 
 
 Ajuste puntos azules con errores
-exponente = 0.316971783244
-intercept = 0.558431179311
+exponente = -0.148415072243
+intercept = 2.4434836027
+
 
 punto iv)
-Asortatividad Barabasi (mu) = 0.316971783244
-Asortatividad Newman (r) = 0.461622466753
+Asortatividad Barabasi (mu) = -0.148415072243
+Asortatividad Newman (r) = -0.198384875121
 '''
+
+
 
 
