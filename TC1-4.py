@@ -15,11 +15,34 @@ myFolder=(os.getcwd()+'/tc01_data/') #busca en el directorio actual
 
 # Primero creamos la red: 
 colab = nx.read_gml(myFolder+'netscience.gml')
-#net = nx.read_gml(myFolder+'as-22july06.gml')
 
 #eliminamos nodos aislados:
 aislados=list(nx.isolates(colab))
 colab.remove_nodes_from(aislados)
+
+#Grafico: Toda la red
+
+plt.figure(1)
+pos = nx.spring_layout(colab)
+nodes=nx.draw_networkx_nodes(colab,pos,cmap=plt.get_cmap('tab10'),node_color=list(dict(colab.degree).values()),width=0.5,node_size=20,with_labels=False) 
+edges=nx.draw_networkx_edges(colab,pos,edge_color='k',width=0.1)
+plt.sci(nodes)
+plt.colorbar()
+plt.title('Red netscience por grados')
+plt.show()
+
+#Grafico: componente gigante
+
+plt.figure(2)
+giant = max(nx.connected_component_subgraphs(colab), key=len)
+pos = nx.spring_layout(giant)
+nodes=nx.draw_networkx_nodes(giant,pos,cmap=plt.get_cmap('tab10'),node_color=list(dict(giant.degree).values()),width=0.5,node_size=20,with_labels=False) 
+edges=nx.draw_networkx_edges(giant,pos,edge_color='k',width=0.1)
+plt.sci(nodes)
+plt.colorbar()
+plt.title('Red netscience por grados \n Componente gigante')
+plt.show()
+
 
 #Matriz de Adjacencia Aij:
 C_adj = nx.to_numpy_matrix(colab) 
@@ -75,7 +98,7 @@ print ('intercept = {}'.format(intercept1))
 print('\n')
 
 
-xfit1=np.linspace(1,40,1000)
+xfit1=np.linspace(1,50,1000)
 yfit1=(b1)*(xfit1**mu1)
 
 #Ajuste 2: usando los puntos azules
@@ -90,7 +113,7 @@ print ('exponente = {}'.format(mu2))
 print ('intercept = {}'.format(intercept2))
 print('\n')
 
-xfit2=np.linspace(1,40,1000)
+xfit2=np.linspace(1,50,1000)
 yfit2=(b2)*(xfit2**mu2)
 
 #AJuste 3: usando los puntos azules del grafico knn(k) y usando tambien el error:
@@ -111,12 +134,12 @@ print ('intercept = {}'.format(intercept3))
 print('\n')
 
 
-xfit3=np.linspace(1,40,1000)
+xfit3=np.linspace(1,50,1000)
 yfit3=(b3)*(xfit3**mu3)
 
 
 #Graficos
-plt.figure(1)
+plt.figure(3)
 #Puntos rojos
 plt.plot(k_nodo,knn_nodo,'ro',markersize=1)
 #Puntos azules
@@ -133,7 +156,7 @@ plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('$k$')
 plt.ylabel('$knn$')
-plt.title('Exponente de Correlacion - Red de Colaboradores Cientificas (netscience)')
+plt.title('Exponente de Correlacion - Red netscience)')
 plt.legend()
 plt.show()
 
