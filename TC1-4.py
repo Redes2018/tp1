@@ -21,14 +21,14 @@ aislados=list(nx.isolates(colab))
 colab.remove_nodes_from(aislados)
 
 #Grafico: Toda la red
-
 plt.figure(1)
 pos = nx.spring_layout(colab)
 nodes=nx.draw_networkx_nodes(colab,pos,cmap=plt.get_cmap('tab10'),node_color=list(dict(colab.degree).values()),width=0.5,node_size=20,with_labels=False) 
 edges=nx.draw_networkx_edges(colab,pos,edge_color='k',width=0.1)
+#nx.draw_networkx_labels(colab,pos,font_size=5)
 plt.sci(nodes)
 plt.colorbar()
-plt.title('Red netscience por grados')
+plt.title('Red netscience por grados \n Componente gigante')
 plt.show()
 
 #Grafico: componente gigante
@@ -38,6 +38,7 @@ giant = max(nx.connected_component_subgraphs(colab), key=len)
 pos = nx.spring_layout(giant)
 nodes=nx.draw_networkx_nodes(giant,pos,cmap=plt.get_cmap('tab10'),node_color=list(dict(giant.degree).values()),width=0.5,node_size=20,with_labels=False) 
 edges=nx.draw_networkx_edges(giant,pos,edge_color='k',width=0.1)
+#nx.draw_networkx_labels(giant,pos,font_size=5)
 plt.sci(nodes)
 plt.colorbar()
 plt.title('Red netscience por grados \n Componente gigante')
